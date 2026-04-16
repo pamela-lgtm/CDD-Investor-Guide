@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding CDDs | Verandah Properties</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #008C82;
+    --teal-light: #e6f4f3;
+    --teal-mid: #005f5a;
+    --gold: #D4AF50;
+    --gold-light: #f9f3e3;
+    --ink: #1a1a1a;
+    --ink-mid: #3d3d3d;
+    --ink-light: #6b6b6b;
+    --cream: #faf9f7;
+    --white: #ffffff;
+    --border: rgba(0,140,130,0.15);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 64px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand { display: flex; flex-direction: column; gap: 4px; }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-date {
+    font-size: 12px;
+    color: var(--ink-light);
+    font-weight: 300;
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 64px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--teal);
+  }
+
+  .hero-intro {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.8;
+    max-width: 620px;
+    border-left: 2px solid var(--gold);
+    padding-left: 24px;
+  }
+
+  /* What is a CDD */
+  .definition-block {
+    background: var(--teal);
+    border-radius: 2px;
+    padding: 40px 48px;
+    margin-bottom: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .definition-block::before {
+    content: 'CDD';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 140px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .definition-block .def-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .definition-block .def-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .definition-block .def-body {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.8;
+    max-width: 580px;
+  }
+
+  /* How it appears */
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 64px;
+  }
+
+  .info-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 28px 32px;
+  }
+
+  .info-card .card-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--teal-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .info-card .card-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--teal);
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .info-card .card-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+
+  .info-card .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .info-card .card-body {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .section-header .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-header .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    white-space: nowrap;
+  }
+
+  /* Pros and Cons */
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 64px;
+  }
+
+  .pros-col, .cons-col { display: flex; flex-direction: column; gap: 16px; }
+
+  .col-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid;
+  }
+
+  .pros-col .col-header { color: var(--teal); border-color: var(--teal); }
+  .cons-col .col-header { color: #b85c38; border-color: #b85c38; }
+
+  .point-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 20px 24px;
+    border-left: 3px solid;
+  }
+
+  .pros-col .point-card { border-left-color: var(--teal); }
+  .cons-col .point-card { border-left-color: #b85c38; }
+
+  .point-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .point-body {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.7;
+  }
+
+  /* Investor callout */
+  .investor-block {
+    background: var(--gold-light);
+    border: 1px solid rgba(212,175,80,0.3);
+    border-radius: 2px;
+    padding: 40px 48px;
+    margin-bottom: 64px;
+  }
+
+  .investor-block .inv-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .investor-block .inv-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .inv-points { display: flex; flex-direction: column; gap: 14px; }
+
+  .inv-point {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .inv-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .inv-point-text {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+
+  .inv-point-text strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* Bond payoff tip */
+  .tip-block {
+    background: var(--teal-light);
+    border-left: 3px solid var(--teal);
+    padding: 24px 32px;
+    margin-bottom: 64px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .tip-block .tip-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal-mid);
+    margin-bottom: 8px;
+  }
+
+  .tip-block .tip-body {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+
+  .tip-block .tip-body strong {
+    font-weight: 500;
+    color: var(--teal-mid);
+  }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-light);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 24px; }
+    .hero-title { font-size: 36px; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .info-row { grid-template-columns: 1fr; }
+    .header { flex-direction: column; gap: 12px; }
+    .definition-block { padding: 28px 28px; }
+    .investor-block { padding: 28px 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-name">Verandah Properties</div>
+      <div class="brand-tag">Boutique Property Management · Lake Nona · Orlando, Florida</div>
+    </div>
+    <div class="header-date">Investor Education Series<br>April 2026</div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="eyebrow">Investor Education Series</div>
+    <h1 class="hero-title">Understanding<br><em>Community Development</em><br>Districts</h1>
+    <p class="hero-intro">Before you close on any Florida property, understanding the CDD is one of the most important — and most overlooked — steps in your due diligence. Here is everything you need to know.</p>
+  </div>
+
+  <!-- Definition -->
+  <div class="definition-block">
+    <div class="def-label">What is a CDD?</div>
+    <div class="def-title">Community Development District</div>
+    <p class="def-body">A CDD is a special-purpose local government entity created under Florida Statute Chapter 190. It allows a developer to finance community infrastructure — roads, utilities, drainage, and amenities — using tax-exempt municipal bonds, then pass repayment of those bonds to property owners over time through their annual tax bills, typically over 20 to 30 years.</p>
+  </div>
+
+  <!-- How it appears -->
+  <div class="section-header">
+    <div class="section-label">How CDD Charges Appear</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="card-label">Component One</div>
+      <div class="card-title">Debt Service</div>
+      <p class="card-body">Repayment of the original infrastructure bonds. This is the larger of the two charges and disappears once the bonds are fully paid off — typically 20 to 30 years from community inception.</p>
+    </div>
+    <div class="info-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="card-label">Component Two</div>
+      <div class="card-title">Operations & Maintenance</div>
+      <p class="card-body">Ongoing upkeep of CDD-managed amenities and infrastructure. Unlike the debt service, this portion remains on the tax bill indefinitely — it does not expire when the bonds are paid.</p>
+    </div>
+  </div>
+
+  <!-- Pros and Cons -->
+  <div class="section-header">
+    <div class="section-label">Advantages & Considerations</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros-col">
+      <div class="col-header">Advantages</div>
+
+      <div class="point-card">
+        <div class="point-title">World-class infrastructure from day one</div>
+        <p class="point-body">CDDs allow developers to build resort-caliber amenities and infrastructure that would otherwise take decades to fund incrementally — pristine roads, pools, fitness centers, trails, and landscaping.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Lower financing cost passed to buyers</div>
+        <p class="point-body">Tax-exempt municipal bond financing carries a lower interest rate than private borrowing — theoretically benefiting the end buyer compared to if the developer financed infrastructure privately.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Professional long-term maintenance</div>
+        <p class="point-body">The O&M portion funds a dedicated management structure for common areas. Communities tend to remain well-maintained long term, protecting property values.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Resident governance over time</div>
+        <p class="point-body">CDD boards are elected by property owners as the community matures, transferring control away from the developer and giving owners meaningful input over budgets and operations.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Bond payoff flexibility</div>
+        <p class="point-body">Outstanding bond balances can be paid off in a lump sum at or after closing, eliminating the debt service portion from future tax bills — a significant long-term cost saving many owners overlook.</p>
+      </div>
+    </div>
+
+    <div class="cons-col">
+      <div class="col-header">Considerations</div>
+
+      <div class="point-card">
+        <div class="point-title">Significant ongoing cost</div>
+        <p class="point-body">CDD assessments in Florida communities can range from $1,500 to over $4,000 per year — sometimes considerably more — depending on the community and remaining bond balance. This materially affects true cost of ownership.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">It never fully disappears</div>
+        <p class="point-body">Even after debt service bonds are retired, the O&M assessment remains permanently. Property owners are enrolled in the district for as long as they own within it.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Inflates true cost of ownership</div>
+        <p class="point-body">A property that appears attractively priced may carry a CDD assessment that significantly raises the actual annual cost. This must be factored into any return on investment or cash flow analysis.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Newest communities carry highest balances</div>
+        <p class="point-body">Buyers entering newly developed communities take on the full bond obligation at its maximum. The debt service burden is heaviest in the early years and decreases over time as principal is repaid.</p>
+      </div>
+
+      <div class="point-card">
+        <div class="point-title">Governance can become contentious</div>
+        <p class="point-body">As communities mature and residents assume CDD board control from the developer, disagreements over assessment levels, capital projects, and management decisions can create friction and uncertainty.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bond Payoff Tip -->
+  <div class="tip-block">
+    <div class="tip-label">Key Insight for Investors</div>
+    <p class="tip-body"><strong>Many property owners carry the full outstanding bond balance for years without realizing they could pay it off in a lump sum at closing.</strong> Doing so eliminates the debt service portion of the CDD assessment from the tax bill going forward — often resulting in meaningful annual savings. When evaluating any CDD property, always request the current outstanding bond balance and factor the payoff option into your acquisition analysis.</p>
+  </div>
+
+  <!-- Investor Considerations -->
+  <div class="investor-block">
+    <div class="inv-label">For the Investor</div>
+    <div class="inv-title">What This Means for Your Portfolio</div>
+    <div class="inv-points">
+      <div class="inv-point">
+        <div class="inv-dot"></div>
+        <div class="inv-point-text"><strong>Net operating income is directly affected.</strong> The CDD assessment is an owner expense that must be accounted for in any cash flow or cap rate calculation. Always model it explicitly.</div>
+      </div>
+      <div class="inv-point">
+        <div class="inv-dot"></div>
+        <div class="inv-point-text"><strong>Rent pricing must reflect it.</strong> CDD costs factor into the rent needed to achieve target returns. Properties in CDD communities typically command — and require — higher rents to maintain investor margins.</div>
+      </div>
+      <div class="inv-point">
+        <div class="inv-dot"></div>
+        <div class="inv-point-text"><strong>Hold vs. sell decisions are impacted.</strong> A property with a high remaining CDD bond balance and declining rent growth may reach a crossover point where sale — and bond payoff from proceeds — produces a better outcome than continued holding.</div>
+      </div>
+      <div class="inv-point">
+        <div class="inv-dot"></div>
+        <div class="inv-point-text"><strong>Always request the CDD estoppel certificate.</strong> This document confirms the current annual assessment, outstanding bond balance, and payoff amount. It is a standard part of Florida real estate due diligence and should be reviewed before any offer is finalized.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">Verandah Properties LLC</div>
+    <div class="footer-note">Prepared by Pamela Syvertson, Owner & Broker<br>This document is for informational purposes and does not constitute legal or financial advice.</div>
+  </div>
+
+</div>
+</body>
+</html>
